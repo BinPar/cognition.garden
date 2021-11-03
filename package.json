@@ -1,7 +1,7 @@
 {
-  "name": "bpt-next",
+  "name": "cognition-garden",
   "version": "0.0.1",
-  "description": "NextJS - BinPar Template",
+  "description": "Cognition Garden",
   "scripts": {
     "dev": "next dev",
     "useNodeLTS": ". ~/.nvm/nvm.sh && nvm install && nvm use",
