@@ -1,0 +1,136 @@
+name: Code quality and unit testing
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+jobs:
+  setup_node_dependencies:
+    name: Setup Node and dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo and setup
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        id: cache-nm
+        with:
+          path: ./node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Cache dependencies
+        if: steps.cache-nm.outputs.cache-hit != 'true'
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+      - run: npm ci
+        if: steps.cache-nm.outputs.cache-hit != 'true'
+  you_shall_not_pass:
+    name: You shall not pass!
+    needs: [setup_node_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo and setup
+        uses: actions/checkout@v2
+      - name: Check YSNP!
+        run: |
+          if [ -n "$(grep -Rl --include=\*.{ts,tsx,js,jsx} "// YSNP:" .)" ]; then
+              echo "::error::YOU SHALL NOT PASS!!"
+              exit 1
+          fi
+  npm_audit:
+    name: NPM Audit
+    needs: [setup_node_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo and setup
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: NPM Audit
+        run: npm audit --audit-level=high
+  lint:
+    name: Lint code
+    needs: [setup_node_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo and setup
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Lint
+        run: npm run lint
+  type_check:
+    name: Type check
+    needs: [setup_node_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo and setup
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Type check
+        run: npm run typeCheck
+  run_tests:
+    name: Run tests
+    needs: [setup_node_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo and setup
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Run tests
+        run: npm test
+  check_k8s_templates:
+    name: Check k8s templates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo and setup
+        uses: actions/checkout@v2
+      - uses: vmware-tanzu/carvel-setup-action@v1
+        with:
+          only: ytt
+          ytt: '0.36.0'
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compile k8s templates
+        run: ./.github/workflows/compile-k8s-templates.sh "test pre-release release"
+  notify_discord:
+    name: Notify discord
+    runs-on: ubuntu-latest
+    needs: [you_shall_not_pass, npm_audit, lint, type_check, run_tests]
+    continue-on-error: true
+    steps:
+      - name: Tests for PR success
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: info
+          details: 'Tests for PR ${{ github.event.pull_request.url }} of ${{ github.event.repository.name }} successfully executed'
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          avatarUrl: ${{ secrets.DISCORD_AVATAR_URL }}
