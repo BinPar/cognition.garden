@@ -18,6 +18,7 @@ RUN npm install
 FROM build-base AS compile
 COPY ./pages ./pages
 COPY ./src ./src
+COPY ./public ./public
 COPY --from=dependencies /usr/src/app/node_modules ./node_modules
 RUN npm run build
 
