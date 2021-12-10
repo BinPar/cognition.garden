@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/BinPar/bpt-next/compare/v0.0.2...v0.0.3) (2021-12-10)
+
+
+### Features
+
+* general format fix ([90369d2](https://github.com/BinPar/bpt-next/commit/90369d28fac93ee838a1249f785056fb42d68fa2))
+* tail wind ([c0021bd](https://github.com/BinPar/bpt-next/commit/c0021bde89ab9b8b04862f41ba1d40c970c8adf6))
+* working with mdx ([9b9a7f8](https://github.com/BinPar/bpt-next/commit/9b9a7f88e9a84b0cdc9516d92849019d89146e41))
+
+
+### Bug Fixes
+
+* build ([c947346](https://github.com/BinPar/bpt-next/commit/c947346cc827c52ae08c6850514f830ff2bb04e2))
+* duplicated release ([ebc6fb8](https://github.com/BinPar/bpt-next/commit/ebc6fb84098349395166824cd6484777a151a3cf))
+* I just can't mdx with security ([72e2d7d](https://github.com/BinPar/bpt-next/commit/72e2d7d6192d329df3fd33be414ffc03b5ca93aa))
+
 ### 0.0.2 (2021-11-03)
 
 
