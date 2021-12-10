@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "Cognition Garden",
   "scripts": {
-    "dev": "next-remote-watch ./posts",
+    "dev": "next",
     "useNodeLTS": ". ~/.nvm/nvm.sh && nvm install && nvm use",
     "build": "next build",
     "start": "next start -p 80",
