@@ -1,6 +1,6 @@
 {
   "name": "cognition-garden",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Cognition Garden",
   "scripts": {
     "dev": "next",
